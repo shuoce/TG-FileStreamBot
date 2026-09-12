@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"EverythingSuckz/fsb/config"
+"EverythingSuckz/fsb/internal/authorization"
 	"EverythingSuckz/fsb/internal/utils"
 
 	"github.com/celestix/gotgproto/dispatcher"
@@ -46,10 +47,10 @@ func sendLink(ctx *ext.Context, u *ext.Update) error {
 	if peerChatId.Type != int(storage.TypeUser) {
 		return dispatcher.EndGroups
 	}
-	if len(config.ValueOf.AllowedUsers) != 0 && !utils.Contains(config.ValueOf.AllowedUsers, chatId) {
-		ctx.Reply(u, ext.ReplyTextString("你没有权限使用此机器人。"), nil)
-		return dispatcher.EndGroups
-	}
+if !authorization.IsAuthorized(chatId) {
+ctx.Reply(u, ext.ReplyTextString("🔐 暂无使用权限，请先发送 /start 申请使用。"), nil)
+return dispatcher.EndGroups
+}
 	supported, err := supportedMediaFilter(u.EffectiveMessage)
 	if err != nil {
 		return err

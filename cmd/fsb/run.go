@@ -1,6 +1,7 @@
 package main
 
 import (
+        "EverythingSuckz/fsb/internal/authorization"
 	"EverythingSuckz/fsb/config"
 	"EverythingSuckz/fsb/internal/bot"
 	"EverythingSuckz/fsb/internal/cache"
@@ -32,6 +33,11 @@ func runApp(cmd *cobra.Command, args []string) {
 	config.Load(utils.Logger, cmd)
 	// reinitialize with correct dev mode
 	utils.InitLogger(config.ValueOf.Dev)
+
+        if err := authorization.Init(); err != nil {
+    utils.Logger.Sugar().Fatalf("初始化授权数据库失败: %v", err)
+}
+
 	log := utils.Logger
 	mainLogger := log.Named("Main")
 	mainLogger.Info("正在启动服务器")
