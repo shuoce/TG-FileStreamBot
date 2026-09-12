@@ -102,11 +102,9 @@ func handleBroadcastMessage(ctx *ext.Context, u *ext.Update) error {
 
 	message := ""
 
-	if msg := u.EffectiveMessage; msg != nil {
-		if m, ok := msg.(*tg.Message); ok {
-			message = strings.TrimSpace(m.Message)
-		}
-	}
+if msg := u.EffectiveMessage; msg != nil {
+    message = strings.TrimSpace(msg.Message)
+}
 
 	if message == "" {
 		broadcastWaitingMu.Lock()
