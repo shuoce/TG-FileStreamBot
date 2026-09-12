@@ -39,6 +39,14 @@ func (m *command) LoadAuthorization(dispatcher dispatcher.Dispatcher) {
 			rejectUser,
 		),
 	)
+
+		dispatcher.AddHandler(
+		handlers.NewCommand("suspend", suspendUser),
+	)
+
+	dispatcher.AddHandler(
+		handlers.NewCommand("unsuspend", unsuspendUser),
+	)
 }
 
 func requestAccess(ctx *ext.Context, u *ext.Update) error {
@@ -149,4 +157,70 @@ func handleApproval(ctx *ext.Context, u *ext.Update, approve bool) error {
 	}
 
 	return nil
+}
+
+func suspendUser(ctx *ext.Context, u *ext.Update) error {
+	if u.EffectiveChat().GetID() != config.ValueOf.AdminID {
+		return nil
+	}
+
+	message := u.EffectiveMessage.GetMessage()
+	parts := strings.Fields(message)
+
+	if len(parts) != 2 {
+		_, err := ctx.Reply(u, ext.ReplyTextString("用法：/suspend 用户ID"), nil)
+		return err
+	}
+
+	userID, err := strconv.ParseInt(parts[1], 10, 64)
+	if err != nil {
+		_, err = ctx.Reply(u, ext.ReplyTextString("❌ 用户ID无效。"), nil)
+		return err
+	}
+
+	if err := authorization.Suspend(userID); err != nil {
+		_, err = ctx.Reply(u, ext.ReplyTextString("❌ 暂停失败。"), nil)
+		return err
+	}
+
+	_, err = ctx.Reply(
+		u,
+		ext.ReplyTextString(fmt.Sprintf("⛔ 已暂停用户 %d 的使用权限。", userID)),
+		nil,
+	)
+
+	return err
+}
+
+func unsuspendUser(ctx *ext.Context, u *ext.Update) error {
+	if u.EffectiveChat().GetID() != config.ValueOf.AdminID {
+		return nil
+	}
+
+	message := u.EffectiveMessage.GetMessage()
+	parts := strings.Fields(message)
+
+	if len(parts) != 2 {
+		_, err := ctx.Reply(u, ext.ReplyTextString("用法：/unsuspend 用户ID"), nil)
+		return err
+	}
+
+	userID, err := strconv.ParseInt(parts[1], 10, 64)
+	if err != nil {
+		_, err = ctx.Reply(u, ext.ReplyTextString("❌ 用户ID无效。"), nil)
+		return err
+	}
+
+	if err := authorization.Unsuspend(userID); err != nil {
+		_, err = ctx.Reply(u, ext.ReplyTextString("❌ 恢复失败。"), nil)
+		return err
+	}
+
+	_, err = ctx.Reply(
+		u,
+		ext.ReplyTextString(fmt.Sprintf("✅ 已恢复用户 %d 的使用权限。", userID)),
+		nil,
+	)
+
+	return err
 }
