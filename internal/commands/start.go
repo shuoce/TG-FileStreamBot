@@ -49,7 +49,17 @@ func start(ctx *ext.Context, u *ext.Update) error {
 
 	_, err := ctx.Reply(
 		u,
-		ext.ReplyTextString("你好，欢迎使用此机器人，给我发一个 文件/视频/图片/音频 我可以帮你生成直链。"),
+		ext.ReplyTextString("👋 欢迎使用 Shuoce File Stream
+
+📁 发送文件、视频、图片或音频
+🔗 自动生成可访问的直链
+⚡ 简单、快速，无需额外操作
+
+⚠️ 使用声明
+请勿使用本机器人存储、传播任何违法违规内容。
+请合理使用本服务，由此产生的一切责任由使用者自行承担。
+
+感谢你的使用 ❤️"),
 		nil,
 	)
 
