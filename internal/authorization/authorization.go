@@ -101,3 +101,22 @@ return db.Model(&AuthorizedUser{}).
 Where("user_id = ?", userID).
 Update("status", "approved").Error
 }
+
+// GetApprovedUsers returns all approved user IDs.
+func GetApprovedUsers() ([]int64, error) {
+	if db == nil {
+		return nil, gorm.ErrInvalidDB
+	}
+
+	var users []AuthorizedUser
+	if err := db.Where("status = ?", "approved").Find(&users).Error; err != nil {
+		return nil, err
+	}
+
+	ids := make([]int64, 0, len(users))
+	for _, user := range users {
+		ids = append(ids, user.UserID)
+	}
+
+	return ids, nil
+}
