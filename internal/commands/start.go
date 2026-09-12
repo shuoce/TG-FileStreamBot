@@ -66,3 +66,4 @@ func start(ctx *ext.Context, u *ext.Update) error {
 	)
 
 	return err
+}
