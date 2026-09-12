@@ -103,7 +103,7 @@ func handleBroadcastMessage(ctx *ext.Context, u *ext.Update) error {
 	message := ""
 
 if msg := u.EffectiveMessage; msg != nil {
-    message = strings.TrimSpace(msg.Message)
+    message = strings.TrimSpace(msg.Text)
 }
 
 	if message == "" {
