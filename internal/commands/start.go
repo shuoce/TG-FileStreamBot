@@ -20,7 +20,6 @@ func (m *command) LoadStart(dispatcher dispatcher.Dispatcher) {
 func start(ctx *ext.Context, u *ext.Update) error {
         fmt.Println("========== START COMMAND RECEIVED ==========")
 	chatId := u.EffectiveChat().GetID()
-	chatId := u.EffectiveChat().GetID()
 	peerChatId := ctx.PeerStorage.GetPeerById(chatId)
 
 	if peerChatId.Type != int(storage.TypeUser) {
