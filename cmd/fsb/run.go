@@ -28,6 +28,7 @@ var runCmd = &cobra.Command{
 var startTime time.Time = time.Now()
 
 func runApp(cmd *cobra.Command, args []string) {
+    printDiskInfo()
 	// initialize logger early so config loading is logged to file
 	utils.InitLogger(false)
 	config.Load(utils.Logger, cmd)
